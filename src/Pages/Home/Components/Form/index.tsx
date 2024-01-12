@@ -14,7 +14,7 @@ export interface TaskInput {
 
 export function Form() {
 
-  const { taskMutation } = useTasksAPI();
+  const { newTaskMutation } = useTasksAPI();
 
   const taskInputSchema = z.object({
     title: z.string().min(1, 'Title is required'),
@@ -27,7 +27,7 @@ export function Form() {
 
   function addTask(data): SubmitHandler<TaskInput> {
     const { title, description } = data
-    taskMutation.mutate({ title, description })
+    newTaskMutation.mutate({ title, description })
     setValue("title", "")
     setValue("description", "")
     return data
@@ -41,11 +41,11 @@ export function Form() {
         gap: "0.5rem"
       }}
     >
-      <input disabled={taskMutation.isLoading} type="text" placeholder="Title" {...register("title")} />
+      <input disabled={newTaskMutation.isLoading} type="text" placeholder="Title" {...register("title")} />
       {formError.title?.message}
-      <input disabled={taskMutation.isLoading} type="text" placeholder="Description" {...register("description")} />
+      <input disabled={newTaskMutation.isLoading} type="text" placeholder="Description" {...register("description")} />
       {formError.description?.message}
-      <button disabled={taskMutation.isLoading} >+ Add task</button>
+      <button disabled={newTaskMutation.isLoading} >+ Add task</button>
     </form >
   )
 }

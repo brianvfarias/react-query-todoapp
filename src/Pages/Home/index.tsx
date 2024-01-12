@@ -11,7 +11,7 @@ export function Home() {
       <strong>Todo list</strong>
       <Form />
       {tasks && tasks.map(
-        ({ description, id, title }: TaskProps) => <Task key={id} title={title} description={description} />
+        ({ description, id, title, completed_at }: TaskProps) => <Task completed_at={completed_at ? completed_at : undefined} id={id} key={id} title={title} description={description} />
       )
       }
     </div>

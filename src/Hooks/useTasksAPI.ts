@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 
 import Axios from 'axios'
 import { TaskInput } from '../Pages/Home/Components/Form'
+import axios from 'axios'
 
 export function useTasksAPI() {
   const queryClient = useQueryClient()
@@ -11,7 +12,7 @@ export function useTasksAPI() {
     )
   })
 
-  const taskMutation = useMutation({
+  const newTaskMutation = useMutation({
     mutationFn: ({ title, description }: TaskInput) => {
       return Axios.post('http://localhost:1337/tasks', {
         title,
@@ -23,5 +24,23 @@ export function useTasksAPI() {
     },
   })
 
-  return { taskQuery, taskMutation }
+  const deleteTaskMutation = useMutation({
+    mutationFn: (id: string) => {
+      return axios.delete(`http://localhost:1337/tasks/${id}`)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['todos'])
+    },
+  })
+
+  const checkTaskAsDone = useMutation({
+    mutationFn: (id: string) => {
+      return axios.patch(`http://localhost:1337/tasks/${id}/complete`)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['todos'])
+    },
+  })
+
+  return { taskQuery, newTaskMutation, deleteTaskMutation, checkTaskAsDone }
 }

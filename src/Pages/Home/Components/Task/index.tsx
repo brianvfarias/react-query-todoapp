@@ -1,4 +1,6 @@
 import { useTasksAPI } from "../../../../Hooks/useTasksAPI"
+import { Trash } from 'lucide-react'
+import { TaskEdition } from "../TaskEdition"
 
 export interface TaskProps {
   title: string
@@ -13,12 +15,23 @@ export function Task({ id, description, title, completed_at }: TaskProps) {
   return (
     <div>
       <strong>{title}</strong>
-      <div>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem'
+      }}>
         <input type="checkbox"
           checked={!!completed_at}
           onChange={() => { checkTaskAsDone.mutate(id) }} />
         {completed_at ? <del>{description}</del> : description}
-        <button onClick={() => deleteTaskMutation.mutate(id)} >X</button>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem'
+        }}>
+          <TaskEdition id={id} title={title} description={description} />
+          <button style={{ padding: '0.5rem' }} onClick={() => deleteTaskMutation.mutate(id)} ><Trash color='white' size={14} /></button>
+        </div>
       </div>
     </div>
   )

@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 import Axios from 'axios'
 import { TaskInput } from '../Pages/Home/Components/Form'
 import axios from 'axios'
+import { TaskEditionProps } from '../Pages/Home/Components/TaskEdition'
 
 export function useTasksAPI() {
   const queryClient = useQueryClient()
@@ -42,5 +43,23 @@ export function useTasksAPI() {
     },
   })
 
-  return { taskQuery, newTaskMutation, deleteTaskMutation, checkTaskAsDone }
+  const updateTaskMutation = useMutation({
+    mutationFn: ({ id, title, description }: TaskEditionProps) => {
+      return axios.put(`http://localhost:1337/tasks/${id}`, {
+        title,
+        description,
+      })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['todos'])
+    },
+  })
+
+  return {
+    taskQuery,
+    newTaskMutation,
+    deleteTaskMutation,
+    checkTaskAsDone,
+    updateTaskMutation,
+  }
 }

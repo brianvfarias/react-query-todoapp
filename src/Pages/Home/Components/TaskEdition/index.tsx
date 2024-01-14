@@ -14,8 +14,9 @@ export interface TaskEditionProps {
 
 export function TaskEdition({ id, title, description }: TaskEditionProps) {
 
-  const insertedTitle = useRef<HTMLInputElement>();
-  const insertedDescription = useRef<HTMLInputElement>();
+  const insertedTitle = useRef<HTMLInputElement | null>(null);
+  const insertedDescription = useRef<HTMLInputElement | null>(null);
+  const saveButton = useRef<HTMLInputElement | null>(null);
   const { updateTaskMutation } = useTasksAPI()
   return (
     <Dialog.Root>
@@ -42,17 +43,32 @@ export function TaskEdition({ id, title, description }: TaskEditionProps) {
             <label className="Label" htmlFor="name">
               Name
             </label>
-            <input onChange={() => console.log(insertedTitle.current?.value)} ref={insertedTitle} className="Input" id="title" defaultValue={title} />
+            <input onChange={() => {
+              if (insertedTitle.current!.value === "" || insertedDescription.current!.value === "") {
+                saveButton.current!.disabled = true;
+                return
+              }
+              saveButton.current!.disabled = false;
+            }} ref={insertedTitle} className="Input" id="title" defaultValue={title} />
           </fieldset>
           <fieldset className="Fieldset">
             <label className="Label" htmlFor="username">
               Username
             </label>
-            <input ref={insertedDescription} className="Input" id="description" defaultValue={description} />
+            <input
+              onChange={() => {
+                if (insertedTitle.current!.value === "" || insertedDescription.current!.value === "") {
+                  saveButton.current!.disabled = true;
+                  return
+                }
+                saveButton.current!.disabled = false;
+              }}
+              ref={insertedDescription} className="Input" id="description" defaultValue={description} />
           </fieldset>
           <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
             <Dialog.Close asChild>
               <button
+                ref={saveButton}
                 onClick={() => {
                   if (insertedDescription.current!.value != description || insertedTitle.current!.value != title) {
                     const updateTask = {

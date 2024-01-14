@@ -16,7 +16,7 @@ export function TaskEdition({ id, title, description }: TaskEditionProps) {
 
   const insertedTitle = useRef<HTMLInputElement | null>(null);
   const insertedDescription = useRef<HTMLInputElement | null>(null);
-  const saveButton = useRef<HTMLInputElement | null>(null);
+  const saveButton = useRef<HTMLButtonElement | null>(null);
   const { updateTaskMutation } = useTasksAPI()
   return (
     <Dialog.Root>
